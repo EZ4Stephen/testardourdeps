@@ -1,0 +1,57 @@
+{
+  "dependencies": [
+	"boost-ptr-container",
+	"glib",
+	"libsigcpp",
+	"glibmm",
+	"libsndfile",
+	"curl",
+	"libarchive",
+	"liblo",
+	"taglib",
+	"vamp-sdk",
+	"libusb",
+	"rubberband",
+	"jack2",
+	"pthreads",
+	"fftw3",
+	"aubio",
+	"libpng",
+	"pango",
+	"pangomm",
+	"cairomm",
+	"lv2",
+	"libxml2",
+	"cppunit",
+	"libwebsockets",
+	{ "name": "portaudio", "features": ["asio"] },
+	"libsamplerate",
+	"serd",
+	"sord",
+	"sratom",
+	"lilv"
+  ],
+  "builtin-baseline": "ac7af7424cbaf9057cb246b620f455303dccd6ed",
+  "overrides": [
+    { 
+      "name": "libsigcpp", 
+      "version": "2.12.1"
+    },
+    { 
+      "name": "glibmm", 
+      "version": "2.62.0"
+    },
+    {
+      "name": "pango",
+      "version": "1.42.4"
+    },
+    {
+      "name": "pangomm",
+      "version": "2.42.2"
+    },
+    {
+      "name": "cairomm",
+      "version": "1.14.5"
+    }
+  ]
+}	
