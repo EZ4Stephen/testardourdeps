@@ -1,0 +1,13 @@
+{
+  "name": "libsigcpp",
+  "version": "2.12.1",
+  "description": "Typesafe callback framework for C++",
+  "homepage": "https://libsigcplusplus.github.io/libsigcplusplus/",
+  "license": "LGPL-3.0-or-later",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

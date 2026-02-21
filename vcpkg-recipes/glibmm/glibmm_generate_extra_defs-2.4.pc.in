@@ -1,0 +1,11 @@
+prefix=${pcfiledir}/../..
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: glibmm_generate_extra_defs-2.4
+Description: Extra defs generator for glibmm
+Version: 2.62.0
+Requires: glibmm-2.4
+Libs: -L${libdir} -lglibmm_generate_extra_defs-2.4
+Cflags: -I${includedir}/glibmm-2.4 -I${libdir}/glibmm-2.4/include
