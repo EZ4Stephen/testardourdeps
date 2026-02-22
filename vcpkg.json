@@ -15,7 +15,7 @@
 	"jack2",
 	"pthreads",
 	"fftw3",
-	"aubio",
+	{ "name": "aubio", "default-features": false },
 	"libpng",
 	"pango",
 	"pangomm",
