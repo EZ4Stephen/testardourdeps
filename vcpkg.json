@@ -2,8 +2,6 @@
   "dependencies": [
 	"boost-ptr-container",
 	"glib",
-	"libsigcpp",
-	"glibmm",
 	"libsndfile",
 	"curl",
 	"libarchive",
@@ -18,8 +16,6 @@
 	{ "name": "aubio", "default-features": false },
 	"libpng",
 	"pango",
-	"pangomm",
-	"cairomm",
 	"lv2",
 	"libxml2",
 	"cppunit",
@@ -31,27 +27,5 @@
 	"sratom",
 	"lilv"
   ],
-  "builtin-baseline": "ac7af7424cbaf9057cb246b620f455303dccd6ed",
-  "overrides": [
-    { 
-      "name": "libsigcpp", 
-      "version": "2.12.1"
-    },
-    { 
-      "name": "glibmm", 
-      "version": "2.62.0"
-    },
-    {
-      "name": "pango",
-      "version": "1.42.4"
-    },
-    {
-      "name": "pangomm",
-      "version": "2.42.2"
-    },
-    {
-      "name": "cairomm",
-      "version": "1.14.5"
-    }
-  ]
+  "builtin-baseline": "62159a45e18f3a9ac0548628dcaf74fcb60c6ff9"
 }	
