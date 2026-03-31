@@ -12,7 +12,7 @@
 	"rubberband",
 	"jack2",
 	"pthreads",
-	"fftw3",
+	{ "name": "fftw3", "features": ["threads"] },
 	{ "name": "aubio", "default-features": false },
 	"libpng",
 	"pango",
@@ -26,7 +26,14 @@
 	"sord",
 	"sratom",
 	"lilv",
-	"boost-uuid"
+	"boost-uuid",
+	"boost-tokenizer",
+	"boost-multiprecision",
+	"boost-pool",
+	"boost-algorithm",
+	"boost-property-tree",
+	"boost-multi-array",
+	"getopt"
   ],
   "builtin-baseline": "62159a45e18f3a9ac0548628dcaf74fcb60c6ff9"
 }	
