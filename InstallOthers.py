@@ -4,6 +4,7 @@ import tarfile
 import subprocess
 import shutil
 import os
+import re
 
 URLS = [
     "https://download.gnome.org/sources/libsigc++/2.12/libsigc++-2.12.1.tar.xz",
@@ -220,6 +221,28 @@ replace_in_file(
 build_with_meson("pangomm", DEPS_DIR / "pangomm-2.42.2")
 
 for cfg in ("", "debug/"):
-    jack_pc = VCPKG_ROOT / f"{cfg}lib/pkgconfig/jack.pc"
+    d = VCPKG_ROOT / cfg / "lib"
+    jack_pc = d / "pkgconfig/jack.pc"
+
     if jack_pc.read_text().splitlines()[9] != "Version: 1.9.22":
         replace_in_file(jack_pc, jack_pc.read_text().splitlines()[9], "Version: 1.9.22")
+
+    if not (d / "lo.lib").exists() and (d / "liblo.lib").exists():
+        shutil.copy(d / "liblo.lib", d / "lo.lib")
+
+    for s, t in (("VampHostSDK.lib", "vamp-hostsdk.lib"), ("VampPluginSDK.lib", "vamp-sdk.lib")):
+        if (d / s).exists() and not (d / t).exists():
+            shutil.copy(d / s, d / t)
+
+    pc_path = d / "pkgconfig/vamp-hostsdk.pc"
+    if " -ldl" in pc_path.read_text():
+        replace_in_file(pc_path, " -ldl", "")
+
+for pc in VCPKG_ROOT.rglob("*.pc"):
+    text = pc.read_text()
+    if "prefix=${pcfiledir}" not in text:
+        pc.write_text(re.sub(r"(?m)^prefix=.*$", "prefix=${pcfiledir}/../..", text, count=1))
+
+debug_include = VCPKG_ROOT / "debug" / "include"
+if debug_include.exists():
+    shutil.rmtree(debug_include)
