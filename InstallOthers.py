@@ -5,6 +5,7 @@ import subprocess
 import shutil
 import os
 import re
+import sys
 
 URLS = [
     "https://download.gnome.org/sources/libsigc++/2.12/libsigc++-2.12.1.tar.xz",
@@ -16,8 +17,8 @@ URLS = [
 DEPS_DIR = Path("Deps")
 DEPS_DIR.mkdir(exist_ok=True)
 
-VCPKG_ROOT = Path.cwd() / "vcpkg_installed" / "x64-windows"
-VCPKG_TOOLS = Path("vcpkg_installed/x64-windows/tools/pkgconf")
+VCPKG_ROOT = Path.cwd() / "vcpkg/installed/x64-windows"
+VCPKG_TOOLS = VCPKG_ROOT / "tools/pkgconf"
 PKGCONF_EXE = VCPKG_TOOLS / "pkgconf.exe"
 PKG_CONFIG_EXE = VCPKG_TOOLS / "pkg-config.exe"
 SIGCPP_DIR = DEPS_DIR / "libsigc++-2.12.1"
@@ -34,12 +35,12 @@ if PKGCONF_EXE.exists() and not PKG_CONFIG_EXE.exists():
 for url in URLS:
     archive = DEPS_DIR / Path(url).name
     urllib.request.urlretrieve(url, archive)
-    tarfile.open(archive, "r:xz").extractall(DEPS_DIR)
+    tarfile.open(archive, "r:xz").extractall(DEPS_DIR, filter="data")
     archive.unlink()
 
-missing = [cmd for cmd in ("meson", "ninja") if not shutil.which(cmd)]
-if missing:
-    subprocess.run(["pip", "install", *missing], check=True)
+_scripts = Path(sys._base_executable).parent / "Scripts"
+subprocess.run([sys._base_executable, "-m", "pip", "install", "meson", "ninja"], check=True)
+MESON_EXE = _scripts / "meson.exe"
 
 vcvarsall = subprocess.run(
     r'where /r "C:\Program Files\Microsoft Visual Studio" vcvarsall.bat',
@@ -55,7 +56,7 @@ def build_with_meson(name: str, src_dir: Path) -> None:
         env["PKG_CONFIG_PATH"] = str(pkg_config_path)
 
         subprocess.run(
-            f'meson setup {build} --prefix={prefix} -Dbuild-documentation=false -Dbuildtype={cfg}',
+            f'"{vcvarsall}" x64 && "{MESON_EXE}" setup {build} --prefix={prefix} -Dbuild-documentation=false -Dbuildtype={cfg}',
             cwd=src_dir, shell=True, check=True, env=env
         )
         subprocess.run(
@@ -206,10 +207,13 @@ create_glibmm_pc_files()
 
 build_with_meson("cairomm", DEPS_DIR / "cairomm-1.14.5")
 
+release_lib = (VCPKG_ROOT / "lib").as_posix()
+debug_lib = (VCPKG_ROOT / "debug/lib").as_posix()
+
 replace_in_file(
     PANGOMM_DIR / "tools" / "extra_defs_gen" / "meson.build",
     "'glibmm_generate_extra_defs@0@-2.4'.format(msvc14x_toolset_ver)",
-"'glibmm_generate_extra_defs-2.4',\n  dirs: [meson.source_root() / (get_option('buildtype') == 'debug' ? '../../vcpkg_installed/x64-windows/debug/lib' : '../../vcpkg_installed/x64-windows/lib')]",
+f"'glibmm_generate_extra_defs-2.4',\n  dirs: [get_option('buildtype') == 'debug' ? '{debug_lib}' : '{release_lib}']",
 )
 
 replace_in_file(
